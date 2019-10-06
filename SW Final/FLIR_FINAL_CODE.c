@@ -7,8 +7,11 @@ Made by Alexandre Gustavo Burche
 */
 
 
-#include "LEPTON_SYS.h"
-#include "raspi_I2C.h"
+#include "leptonSDKEmb32PUB/LEPTON_SDK.h"
+#include "leptonSDKEmb32PUB/LEPTON_SYS.h"
+#include "leptonSDKEmb32PUB/LEPTON_VID.h"
+#include "leptonSDKEmb32PUB/LEPTON_AGC.h"
+#include "leptonSDKEmb32PUB/LEPTON_Types.h"
 
 
 #define NUM 1
@@ -28,7 +31,6 @@ LEP_UINT16  numWordsRead;
 LEP_UINT16  numWordsWritten;
 LEP_UINT16  status;
 LEP_UINT16	commandID;
-LEP_UINT16  PortDescriptor;
 
 LEP_CAMERA_PORT_DESC_T _port;
 LEP_SYS_STATUS_E sysStatus;
@@ -203,7 +205,29 @@ LEP_RESULT lepton_connect()
 int main()
 {
     StartUpSequence();
-	PortDescriptor = lepton_connect();
+    lepton_connect();
 	
-    
+    //Enabling AGC preprocessing
+    LEP_SetAgcEnableState(&_port, LEP_AGC_ENABLE);
+    //Getting the AGC enabble status
+    LEP_AGC_ENABLE_E _isAGCEnabled;
+    LEP_RESULT result = LEP_GetAgcEnableState(&_port, &_isAGCEnabled);
+    //check to see if status is corrected set. Must just pass
+    while(result != LEP_OK);
+    //To inform error
+    //if (result != LEP_OK) printf("LEP_GetAgcEnableState(): %i\n", result);
+
+    //Selecting Policy
+    LEP_AGC_POLICY_E_PTR agcPolicyPtr
+    //LEP_AGC_POLICY_E agcPolicy;
+    //Setting up HEQ policy
+    LEP_SetAgcPolicy(&_port, LEP_AGC_HEQ);
+    result = LEP_GetAgcPolicy(portDescP, &agcPolicyPtr);
+    while(result != LEP_OK);
+    //Setting up Linear policy
+    LEP_SetAgcPolicy(portDescP, LEP_AGC_LINEAR);
+    result = LEP_GetAgcPolicy(portDescP, &agcPolicyPtr);
+    while(result != LEP_OK);
+
+
 }
