@@ -217,16 +217,28 @@ int main()
     //To inform error
     //if (result != LEP_OK) printf("LEP_GetAgcEnableState(): %i\n", result);
 
+    //SYS FFC Mode Control
+    LEP_SYS_FFC_SHUTTER_MODE_OBJ_T shutterModeObjPtr;      //structure to get FFC parameters    
+    LEP_SYS_FFC_SHUTTER_MODE_OBJ_T shutterModeObj;         //como definir valores pra strutura ??
+    //
+    //
+    //Get sequence:
+    LEP_GetFfcShutterModeObj(&_port, shutterModeObjPtr);
+    //como ler valores da estrutura
+    //
+    //Set sequence:
+    LEP_SetFfcShutterModeObj(&_port, shutterModeObj);
+
     //Selecting Policy
     LEP_AGC_POLICY_E_PTR agcPolicyPtr
     //LEP_AGC_POLICY_E agcPolicy;
     //Setting up HEQ policy
     LEP_SetAgcPolicy(&_port, LEP_AGC_HEQ);
-    result = LEP_GetAgcPolicy(portDescP, &agcPolicyPtr);
+    result = LEP_GetAgcPolicy(&_port, &agcPolicyPtr);
     while(result != LEP_OK);
     //Setting up Linear policy
-    LEP_SetAgcPolicy(portDescP, LEP_AGC_LINEAR);
-    result = LEP_GetAgcPolicy(portDescP, &agcPolicyPtr);
+    LEP_SetAgcPolicy(&_port, LEP_AGC_LINEAR);
+    result = LEP_GetAgcPolicy(&_port, &agcPolicyPtr);
     while(result != LEP_OK);
 
 
